@@ -34,19 +34,19 @@ resource "aws_default_vpc" "default_vpc" {
 # Create new subnets
 resource "aws_subnet" "subnet_a" {
   vpc_id            = aws_default_vpc.default_vpc.id
-  cidr_block        = "172.31.200.0/24"
+  cidr_block        = "172.31.240.0/24"
   availability_zone = "eu-west-3a"
 }
 
 resource "aws_subnet" "subnet_b" {
   vpc_id            = aws_default_vpc.default_vpc.id
-  cidr_block        = "172.31.201.0/24"
+  cidr_block        = "172.31.241.0/24"
   availability_zone = "eu-west-3b"
 }
 
 resource "aws_subnet" "subnet_c" {
   vpc_id            = aws_default_vpc.default_vpc.id
-  cidr_block        = "172.31.202.0/24"
+  cidr_block        = "172.31.242.0/24"
   availability_zone = "eu-west-3c"
 }
 
