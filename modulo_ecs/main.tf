@@ -34,32 +34,32 @@ resource "aws_default_vpc" "default_vpc" {
 # Create new subnets
 resource "aws_subnet" "subnet_a" {
   vpc_id            = aws_default_vpc.default_vpc.id
-  cidr_block        = "172.31.250.0/24"  # Cambiar CIDR block
+  cidr_block        = "172.31.230.0/24"  # Cambiar CIDR block
   availability_zone = "eu-west-3a"
 }
 
 resource "aws_subnet" "subnet_b" {
   vpc_id            = aws_default_vpc.default_vpc.id
-  cidr_block        = "172.31.251.0/24"  # Cambiar CIDR block
+  cidr_block        = "172.31.231.0/24"  # Cambiar CIDR block
   availability_zone = "eu-west-3b"
 }
 
 resource "aws_subnet" "subnet_c" {
   vpc_id            = aws_default_vpc.default_vpc.id
-  cidr_block        = "172.31.252.0/24"  # Cambiar CIDR block
+  cidr_block        = "172.31.232.0/24"  # Cambiar CIDR block
   availability_zone = "eu-west-3c"
 }
 
 resource "aws_ecr_repository" "mi_primer_ecr_repo" {
-  name = "mi-primer-ecr-repo-agd-v5"  # Cambiar nombre
+  name = "mi-primer-ecr-repo-agd-v6"  # Cambiar nombre
 }
 
 resource "aws_ecs_cluster" "mi_cluster" {
-  name = "agd-cluster-new-v5"  # Cambiar nombre
+  name = "agd-cluster-new-v6"  # Cambiar nombre
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRoleNew_agd" {
-  name               = "ecsTaskExecutionRoleNew_agd_v5"  # Cambiar nombre
+  name               = "ecsTaskExecutionRoleNew_agd_v6"  # Cambiar nombre
   assume_role_policy = "${data.aws_iam_policy_document.assume_role_policy.json}"
 }
 
@@ -80,7 +80,7 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials_main" {
-  name = "db_credentials_main_v5"  # Cambiar nombre
+  name = "db_credentials_main_v6"  # Cambiar nombre
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials_value_main" {
@@ -107,7 +107,7 @@ resource "aws_db_instance" "db_instance" {
 }
 
 resource "aws_db_subnet_group" "main" {
-  name       = "main-subnet-group-v5"  # Cambiar nombre
+  name       = "main-subnet-group-v6"  # Cambiar nombre
   subnet_ids = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id, aws_subnet.subnet_c.id]
 }
 
@@ -130,11 +130,11 @@ resource "aws_security_group" "rds_sg" {
 }
 
 resource "aws_ecs_task_definition" "mi_primer_task" {
-  family                   = "mi-primer-task-agd-v5"  # Cambiar nombre
+  family                   = "mi-primer-task-agd-v6"  # Cambiar nombre
   container_definitions    = <<DEFINITION
   [
     {
-      "name": "mi-primer-task-agd-v5",
+      "name": "mi-primer-task-agd-v6",
       "image": "${aws_ecr_repository.mi_primer_ecr_repo.repository_url}",
       "essential": true,
       "portMappings": [
@@ -170,7 +170,7 @@ resource "aws_ecs_task_definition" "mi_primer_task" {
 }
 
 resource "aws_alb" "application_load_balancer" {
-  name               = "test-lb-tf-v5"  # Cambiar nombre
+  name               = "test-lb-tf-v6"  # Cambiar nombre
   load_balancer_type = "application"
   subnets = [ 
     "${aws_subnet.subnet_a.id}",
@@ -201,7 +201,7 @@ resource "aws_security_group" "load_balancer_security_group" {
 }
 
 resource "aws_lb_target_group" "target_group" {
-  name        = "target-group-v5"  # Cambiar nombre
+  name        = "target-group-v6"  # Cambiar nombre
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
@@ -219,7 +219,7 @@ resource "aws_lb_listener" "listener" {
 }
 
 resource "aws_ecs_service" "mi_primer_service_agd" {
-  name            = "mi-primer-service-agd-v5"  # Cambiar nombre
+  name            = "mi-primer-service-agd-v6"  # Cambiar nombre
   cluster         = "${aws_ecs_cluster.mi_cluster.id}"             
   task_definition = "${aws_ecs_task_definition.mi_primer_task.arn}" 
   launch_type     = "FARGATE"
@@ -265,7 +265,7 @@ resource "aws_appautoscaling_target" "ecs_scaling_target_main" {
 }
 
 resource "aws_appautoscaling_policy" "ecs_scaling_policy_main" {
-  name               = "scale-out-main-v5"  # Cambiar nombre
+  name               = "scale-out-main-v6"  # Cambiar nombre
   policy_type        = "StepScaling"
   resource_id        = aws_appautoscaling_target.ecs_scaling_target_main.resource_id
   scalable_dimension = aws_appautoscaling_target.ecs_scaling_target_main.scalable_dimension
@@ -284,7 +284,7 @@ resource "aws_appautoscaling_policy" "ecs_scaling_policy_main" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high_main" {
-  alarm_name          = "ecs-cpu-high-main-v5"  # Cambiar nombre
+  alarm_name          = "ecs-cpu-high-main-v6"  # Cambiar nombre
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -302,7 +302,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high_main" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs_cpu_low_main" {
-  alarm_name          = "ecs-cpu-low-main-v5"  # Cambiar nombre
+  alarm_name          = "ecs-cpu-low-main-v6"  # Cambiar nombre
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
