@@ -51,15 +51,15 @@ resource "aws_subnet" "subnet_c" {
 }
 
 resource "aws_ecr_repository" "mi_primer_ecr_repo" {
-  name = "mi-primer-ecr-repo-agd"
+  name = "mi-primer-ecr-repo-agd-v2"
 }
 
 resource "aws_ecs_cluster" "mi_cluster" {
-  name = "agd-cluster-new" # Nombra el cluster
+  name = "agd-cluster-new-v2" # Nombra el cluster
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRoleNew_agd" {
-  name               = "ecsTaskExecutionRoleNew_agd"
+  name               = "ecsTaskExecutionRoleNew_agd_v2"
   assume_role_policy = "${data.aws_iam_policy_document.assume_role_policy.json}"
 }
 
@@ -80,7 +80,7 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials_main" {
-  name = "db_credentials_main"
+  name = "db_credentials_main_v2"
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials_value_main" {
@@ -107,7 +107,7 @@ resource "aws_db_instance" "db_instance" {
 }
 
 resource "aws_db_subnet_group" "main" {
-  name       = "main-subnet-group"
+  name       = "main-subnet-group-v2"
   subnet_ids = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id, aws_subnet.subnet_c.id]
 }
 
@@ -130,11 +130,11 @@ resource "aws_security_group" "rds_sg" {
 }
 
 resource "aws_ecs_task_definition" "mi_primer_task" {
-  family                   = "mi-primer-task-agd" # Nombra tu primer task
+  family                   = "mi-primer-task-agd-v2" # Nombra tu primer task
   container_definitions    = <<DEFINITION
   [
     {
-      "name": "mi-primer-task-agd",
+      "name": "mi-primer-task-agd-v2",
       "image": "${aws_ecr_repository.mi_primer_ecr_repo.repository_url}",
       "essential": true,
       "portMappings": [
@@ -170,7 +170,7 @@ resource "aws_ecs_task_definition" "mi_primer_task" {
 }
 
 resource "aws_alb" "application_load_balancer" {
-  name               = "test-lb-tf" # testea el load balancer
+  name               = "test-lb-tf-v2" # testea el load balancer
   load_balancer_type = "application"
   subnets = [ 
     "${aws_subnet.subnet_a.id}",
@@ -201,7 +201,7 @@ resource "aws_security_group" "load_balancer_security_group" {
 }
 
 resource "aws_lb_target_group" "target_group" {
-  name        = "target-group"
+  name        = "target-group-v2"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
@@ -219,7 +219,7 @@ resource "aws_lb_listener" "listener" {
 }
 
 resource "aws_ecs_service" "mi_primer_service_agd" {
-  name            = "mi-primer-service-agd"                             
+  name            = "mi-primer-service-agd-v2"                             
   cluster         = "${aws_ecs_cluster.mi_cluster.id}"             
   task_definition = "${aws_ecs_task_definition.mi_primer_task.arn}" 
   launch_type     = "FARGATE"
@@ -265,7 +265,7 @@ resource "aws_appautoscaling_target" "ecs_scaling_target_main" {
 }
 
 resource "aws_appautoscaling_policy" "ecs_scaling_policy_main" {
-  name               = "scale-out-main"
+  name               = "scale-out-main-v2"
   policy_type        = "StepScaling"
   resource_id        = aws_appautoscaling_target.ecs_scaling_target_main.resource_id
   scalable_dimension = aws_appautoscaling_target.ecs_scaling_target_main.scalable_dimension
@@ -284,7 +284,7 @@ resource "aws_appautoscaling_policy" "ecs_scaling_policy_main" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high_main" {
-  alarm_name          = "ecs-cpu-high-main"
+  alarm_name          = "ecs-cpu-high-main-v2"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -302,7 +302,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high_main" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs_cpu_low_main" {
-  alarm_name          = "ecs-cpu-low-main"
+  alarm_name          = "ecs-cpu-low-main-v2"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
