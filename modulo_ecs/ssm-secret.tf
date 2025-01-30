@@ -27,7 +27,7 @@ resource "aws_ssm_parameter" "api_key" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name = "db_credentialsagd2"
+  name = "db_credentialsagd3"
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials_value" {
