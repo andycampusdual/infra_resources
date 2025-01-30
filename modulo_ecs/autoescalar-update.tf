@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "nginx_task" {
 }
 
 resource "aws_ecs_service" "nginx_service" {
-  name            = "nginx-service"
+  name            = "nginx-service-new"
   cluster         = aws_ecs_cluster.agd_cluster.id
   task_definition = aws_ecs_task_definition.nginx_task.arn
   desired_count   = 1

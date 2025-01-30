@@ -3,10 +3,10 @@ provider "aws" {
 }
 # Crear un repositorio ECR
 resource "aws_ecr_repository" "ecr_agd" {
-  name = "ecr-agd"
+  name = "ecr-agd-new"
  
   tags = {
-    Name        = "ecr-agd"
+    Name        = "ecr-agd-new"
     Environment = "dev"
   }
 }
