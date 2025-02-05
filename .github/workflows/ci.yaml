@@ -38,4 +38,4 @@ jobs:
     needs: test
     steps:
       - name: Simulate Deployment
-        run: echo "Deploying application..."
+        run: echo "Deploying application...."
